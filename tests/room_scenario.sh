@@ -6,7 +6,7 @@
 # 脚本不关心你的内部设计，只要求外部契约成立：
 #   * 客户端连上后会发出 JOIN；
 #   * host 认识两个玩家，并且能开局；
-#   * 每个客户端拿到自己的 HAND；
+#   * 客户端收到 START 并切换阶段；
 #   * 全流程不再出现框架的 TODO 占位提示。
 set -euo pipefail
 
@@ -116,9 +116,9 @@ wait_for "$tmp/bob.log" 'WELCOME' 300 || check_fail "Bob never received WELCOME"
 checked=$((checked + 1))
 
 printf 'start\n' >&3
-wait_for "$tmp/alice.log" 'HAND' 300 || check_fail "Alice never received HAND"
+wait_for "$tmp/alice.log" 'START' 300 || check_fail "Alice never received START"
 checked=$((checked + 1))
-wait_for "$tmp/bob.log" 'HAND' 300 || check_fail "Bob never received HAND"
+wait_for "$tmp/bob.log" 'START' 300 || check_fail "Bob never received START"
 checked=$((checked + 1))
 
 if grep -q 'TODO' "$tmp/host.log" "$tmp/alice.log" "$tmp/bob.log"; then
